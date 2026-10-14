@@ -15,11 +15,12 @@
 > [!TIP]
 > **El video completo de demostración, explicación y sustentación del laboratorio está alojado en Google Drive:**
 >
-> ### 🔗 [▶️ Ver Video Demostrativo en Google Drive (Clic Aquí)](https://drive.google.com/file/d/TU_LINK_DE_DRIVE_AQUI/view?usp=sharing)
+> ### 🔗 [▶️ Ver Video Demostrativo en Google Drive (Clic Aquí)](https://drive.google.com/file/d/1iaGrMs8GQtiocysuAJCF_1IRuxURjCkY/view?usp=sharing)
 >
-> *(Nota: Reemplaza el enlace por tu URL pública o de visualización de Drive).*
+> _(Nota: Reemplaza el enlace por tu URL pública o de visualización de Drive)._
 >
 > **En el video se evidencian todas las funcionalidades y pruebas obligatorias:**
+>
 > 1. Inicio del servidor Node.js y conexión con AWS S3.
 > 2. Subida de imágenes con Drag & Drop hacia Amazon S3 mediante **Presigned URLs**.
 > 3. Carga en tiempo real de la galería y cálculo de métricas de almacenamiento.
@@ -55,6 +56,7 @@ El principio fundamental de seguridad es que **el bucket S3 es 100% privado** y 
 ## ✨ Características Principales
 
 ### 🖥️ Frontend (UI estilo Google Drive)
+
 - **Top Navbar:** Búsqueda en tiempo real (`Ctrl + K`), cambio de vista (cuadrícula / lista) y avatar de usuario.
 - **Sidebar de Navegación:** Pestañas de Mi Galería, Recientes, Destacados y Papelera.
 - **Widget de Almacenamiento:** Cálculo dinámico de espacio usado y capacidad disponible.
@@ -64,6 +66,7 @@ El principio fundamental de seguridad es que **el bucket S3 es 100% privado** y 
 - **Notificaciones Toast:** Feedback visual estilo Material Design para cada acción (éxito, error, advertencia).
 
 ### 🛡️ Seguridad & Cloud (AWS S3 + IAM)
+
 - **Zero Frontend Credentials:** Las claves `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY` solo residen en el backend en variables de entorno `.env`.
 - **URLs Prefirmadas (Presigned URLs):**
   - Carga (`PUT`): Válida por **5 minutos (300 s)**.
@@ -73,8 +76,8 @@ El principio fundamental de seguridad es que **el bucket S3 es 100% privado** y 
 - **Cifrado en Reposo:** Cifrado automático del lado del servidor habilitado con **SSE-S3 (AES-256)**.
 - **Conexiones Seguras Obligatorias:** Política de bucket que deniega cualquier petición por protocolo HTTP simple forzando HTTPS mediante `aws:SecureTransport`.
 - **Doble Validación:**
-  - *Frontend:* Validación rápida de tipos MIME (`image/jpeg`, `image/png`, `image/webp`) y tamaño `< 5 MB`.
-  - *Backend:* Revalidación estricta antes de firmar cualquier URL.
+  - _Frontend:_ Validación rápida de tipos MIME (`image/jpeg`, `image/png`, `image/webp`) y tamaño `< 5 MB`.
+  - _Backend:_ Revalidación estricta antes de firmar cualquier URL.
 
 ---
 
@@ -101,18 +104,22 @@ s3-gallery/
 ## 🚀 Instalación y Despliegue Local
 
 ### 1. Clonar el repositorio
+
 ```bash
 git clone <URL_DE_TU_REPOSITORIO>
 cd s3-gallery
 ```
 
 ### 2. Configurar variables de entorno
+
 Dentro de la carpeta `backend/`, copia el archivo de ejemplo y coloca tus datos:
+
 ```bash
 cp backend/.env.example backend/.env
 ```
 
 Edita `backend/.env`:
+
 ```env
 AWS_REGION=us-east-1
 S3_BUCKET=tu-nombre-de-bucket
@@ -122,12 +129,14 @@ PORT=3000
 ```
 
 ### 3. Instalar dependencias
+
 ```bash
 cd backend
 npm install
 ```
 
 ### 4. Iniciar la aplicación
+
 ```bash
 node server.js
 ```
@@ -139,28 +148,29 @@ La aplicación quedará disponible en:
 
 ## 📡 Endpoints de la API
 
-| Método | Endpoint | Descripción | Tiempo Expiración |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/upload-url` | Genera una URL prefirmada para subida directa a S3 | **5 minutos** (300s) |
-| `GET` | `/api/images` | Lista los objetos del prefijo `originales/` con URLs prefirmadas | **15 minutos** (900s) |
-| `DELETE` | `/api/images/:key` | Elimina permanentemente el objeto especificado en el bucket | Inmediato |
+| Método   | Endpoint           | Descripción                                                      | Tiempo Expiración     |
+| :------- | :----------------- | :--------------------------------------------------------------- | :-------------------- |
+| `POST`   | `/api/upload-url`  | Genera una URL prefirmada para subida directa a S3               | **5 minutos** (300s)  |
+| `GET`    | `/api/images`      | Lista los objetos del prefijo `originales/` con URLs prefirmadas | **15 minutos** (900s) |
+| `DELETE` | `/api/images/:key` | Elimina permanentemente el objeto especificado en el bucket      | Inmediato             |
 
 ---
 
 ## 🧪 Pruebas Obligatorias Validadas
 
-| N° | Prueba | Resultado Observado |
-| :---: | :--- | :--- |
-| **39** | Subida de imagen JPG válida | ✅ Archivo subido con éxito y renderizado en la galería. |
-| **40** | Subida de `.exe` o `.pdf` | ✅ Bloqueado por el frontend con alerta de tipo no permitido. |
-| **41** | Subida de archivo > 5 MB | ✅ Bloqueado por tamaño excedido tanto en cliente como en servidor. |
-| **42** | Expiración de URL prefirmada | ✅ Al abrir la URL tras 16 minutos, AWS devuelve `Request has expired`. |
-| **43** | Inspección de código fuente | ✅ Pestaña *Sources* confirma ausencia total de llaves `AKIA...` o secretos. |
-| **44** | Inspección de red (Network) | ✅ Petición `PUT` apunta directamente al endpoint de S3 (`*.amazonaws.com`). |
+|   N°   | Prueba                       | Resultado Observado                                                          |
+| :----: | :--------------------------- | :--------------------------------------------------------------------------- |
+| **39** | Subida de imagen JPG válida  | ✅ Archivo subido con éxito y renderizado en la galería.                     |
+| **40** | Subida de `.exe` o `.pdf`    | ✅ Bloqueado por el frontend con alerta de tipo no permitido.                |
+| **41** | Subida de archivo > 5 MB     | ✅ Bloqueado por tamaño excedido tanto en cliente como en servidor.          |
+| **42** | Expiración de URL prefirmada | ✅ Al abrir la URL tras 16 minutos, AWS devuelve `Request has expired`.      |
+| **43** | Inspección de código fuente  | ✅ Pestaña _Sources_ confirma ausencia total de llaves `AKIA...` o secretos. |
+| **44** | Inspección de red (Network)  | ✅ Petición `PUT` apunta directamente al endpoint de S3 (`*.amazonaws.com`). |
 
 ---
 
 ## 👨‍💻 Autor
-* **Estudiante:** Anderson Rivera
-* **Curso:** Computación en la Nube / Cloud Solutions
-* **Institución:** Tecsup / Universidad
+
+- **Estudiante:** Anderson Rivera
+- **Curso:** Computación en la Nube / Cloud Solutions
+- **Institución:** Tecsup / Universidad
