@@ -3,46 +3,263 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galería de Imágenes - Amazon S3</title>
+  <title>CloudVault - Gestor de Imágenes S3</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>📸 Galería Segura en Amazon S3</h1>
-      <p class="subtitle">Carga directa a S3 mediante <strong>Presigned URLs</strong> sin exponer credenciales</p>
-    </header>
 
-    <!-- Zona de carga (Drag and Drop + Input) -->
-    <section class="upload-section">
-      <div id="dropZone" class="drop-zone">
-        <div class="drop-icon">☁️</div>
-        <p>Arrastra tu foto aquí o</p>
-        <label for="fileInput" class="btn-select">Seleccionar Archivo</label>
-        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
-        <span id="fileName" class="file-name">Ningún archivo seleccionado</span>
+  <!-- TOP NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="brand">
+        <i class="fas fa-cloud brand-icon"></i>
+        <span class="brand-name">CloudVault</span>
+        <span class="brand-tag">S3</span>
+      </div>
+    </div>
+    <div class="nav-center">
+      <div class="search-bar">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Buscar en CloudVault..." autocomplete="off">
+        <kbd class="search-shortcut">Ctrl+K</kbd>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn" title="Actualizar" id="refreshBtn">
+        <i class="fas fa-arrows-rotate"></i>
+      </button>
+      <button class="nav-btn" id="viewToggle" title="Cambiar vista">
+        <i class="fas fa-grip" id="viewIcon"></i>
+      </button>
+      <div class="user-avatar" title="app-imagenes-user">
+        <span>AR</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <button class="upload-btn" id="uploadTrigger">
+        <i class="fas fa-plus"></i>
+        <span>Nuevo</span>
+      </button>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="gallery">
+          <i class="fas fa-photo-film"></i>
+          <span>Mi Galería</span>
+        </a>
+        <a href="#" class="nav-item" data-section="recent">
+          <i class="fas fa-clock-rotate-left"></i>
+          <span>Recientes</span>
+        </a>
+        <a href="#" class="nav-item" data-section="starred">
+          <i class="fas fa-star"></i>
+          <span>Destacados</span>
+        </a>
+        <a href="#" class="nav-item" data-section="trash">
+          <i class="fas fa-trash-can"></i>
+          <span>Papelera</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- STORAGE WIDGET -->
+      <div class="storage-widget">
+        <div class="storage-header">
+          <i class="fas fa-hard-drive"></i>
+          <span>Almacenamiento</span>
+        </div>
+        <div class="storage-bar">
+          <div class="storage-fill" id="storageFill"></div>
+        </div>
+        <p class="storage-text" id="storageText">Calculando...</p>
       </div>
 
-      <div class="upload-actions">
-        <button id="uploadBtn" class="btn-primary" disabled>Subir Imagen a S3</button>
+      <!-- BUCKET INFO -->
+      <div class="bucket-info">
+        <div class="info-row">
+          <i class="fas fa-bucket"></i>
+          <span id="bucketName">Cargando...</span>
+        </div>
+        <div class="info-row">
+          <i class="fas fa-location-dot"></i>
+          <span>us-east-1</span>
+        </div>
+        <div class="info-row">
+          <i class="fas fa-shield-halved"></i>
+          <span>Cifrado AES-256</span>
+        </div>
+        <div class="info-row">
+          <i class="fas fa-lock"></i>
+          <span>Presigned URLs</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- UPLOAD MODAL / OVERLAY -->
+      <div class="upload-modal-overlay" id="uploadOverlay">
+        <div class="upload-modal">
+          <div class="upload-modal-header">
+            <h2><i class="fas fa-cloud-arrow-up"></i> Subir Imágenes</h2>
+            <button class="close-modal" id="closeModal"><i class="fas fa-xmark"></i></button>
+          </div>
+          <div class="upload-modal-body">
+            <div id="dropZone" class="drop-zone">
+              <div class="drop-animation">
+                <i class="fas fa-cloud-arrow-up drop-main-icon"></i>
+              </div>
+              <h3>Arrastra tus imágenes aquí</h3>
+              <p>o haz clic para seleccionar</p>
+              <div class="drop-formats">
+                <span><i class="fas fa-image"></i> JPG</span>
+                <span><i class="fas fa-image"></i> PNG</span>
+                <span><i class="fas fa-image"></i> WEBP</span>
+                <span class="size-limit"><i class="fas fa-weight-hanging"></i> Máx 5 MB</span>
+              </div>
+              <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple>
+            </div>
+
+            <!-- Preview before upload -->
+            <div id="previewArea" class="preview-area" style="display:none;">
+              <div class="preview-card" id="previewCard">
+                <img id="previewImg" src="" alt="">
+                <div class="preview-info">
+                  <p class="preview-name" id="previewName"></p>
+                  <p class="preview-meta" id="previewMeta"></p>
+                </div>
+                <button class="preview-remove" id="previewRemove"><i class="fas fa-xmark"></i></button>
+              </div>
+            </div>
+
+            <div id="uploadProgress" class="upload-progress" style="display:none;">
+              <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+              <p class="progress-text" id="progressText">Subiendo...</p>
+            </div>
+          </div>
+          <div class="upload-modal-footer">
+            <button class="btn-cancel" id="cancelUpload">Cancelar</button>
+            <button class="btn-upload" id="uploadBtn" disabled>
+              <i class="fas fa-cloud-arrow-up"></i> Subir a S3
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div id="status" class="status-msg"></div>
-    </section>
-
-    <!-- Galería de imágenes -->
-    <section class="gallery-section">
-      <div class="gallery-header">
-        <h2>🖼️ Imágenes en el Bucket</h2>
-        <button id="refreshBtn" class="btn-secondary">🔄 Actualizar</button>
+      <!-- DRAG OVERLAY (full page) -->
+      <div class="drag-fullscreen-overlay" id="dragOverlay">
+        <div class="drag-overlay-content">
+          <i class="fas fa-cloud-arrow-up"></i>
+          <h2>Suelta para subir</h2>
+          <p>El archivo se subirá directamente a Amazon S3</p>
+        </div>
       </div>
 
-      <div id="loading" class="loading-spinner" style="display: none;">Cargando imágenes...</div>
+      <!-- STATUS TOAST -->
+      <div id="toastContainer" class="toast-container"></div>
+
+      <!-- DASHBOARD HEADER -->
+      <div class="content-header">
+        <div class="header-left">
+          <h1 id="sectionTitle">Mi Galería</h1>
+          <span class="file-count" id="fileCount">0 archivos</span>
+        </div>
+        <div class="header-right">
+          <div class="sort-dropdown">
+            <button class="sort-btn" id="sortBtn">
+              <i class="fas fa-arrow-down-wide-short"></i>
+              <span>Recientes</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK STATS -->
+      <div class="quick-stats" id="quickStats">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;">
+            <i class="fas fa-images"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="totalFiles">0</span>
+            <span class="stat-label">Total Imágenes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #e8f5e9; color: #388e3c;">
+            <i class="fas fa-database"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="totalSize">0 KB</span>
+            <span class="stat-label">Almacenamiento</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #fff3e0; color: #f57c00;">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="lastUpload">--</span>
+            <span class="stat-label">Última Subida</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #fce4ec; color: #d32f2f;">
+            <i class="fas fa-link"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">15 min</span>
+            <span class="stat-label">URL Expiración</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GALLERY -->
+      <div id="loading" class="loading-state" style="display: none;">
+        <div class="spinner"></div>
+        <p>Cargando imágenes desde S3...</p>
+      </div>
+
       <div id="gallery" class="gallery-grid"></div>
+
       <div id="emptyState" class="empty-state" style="display: none;">
-        No hay imágenes en la carpeta <code>originales/</code> del bucket. ¡Sube una!
+        <div class="empty-illustration">
+          <i class="fas fa-folder-open"></i>
+        </div>
+        <h3>No hay imágenes todavía</h3>
+        <p>Sube tu primera imagen para comenzar</p>
+        <button class="btn-empty-upload" id="emptyUploadBtn">
+          <i class="fas fa-plus"></i> Subir Imagen
+        </button>
       </div>
-    </section>
+
+    </main>
+  </div>
+
+  <!-- IMAGE PREVIEW LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-overlay"></div>
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightboxClose"><i class="fas fa-xmark"></i></button>
+      <img id="lightboxImg" src="" alt="">
+      <div class="lightbox-info">
+        <p class="lightbox-name" id="lightboxName"></p>
+        <p class="lightbox-meta" id="lightboxMeta"></p>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
