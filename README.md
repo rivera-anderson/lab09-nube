@@ -12,11 +12,14 @@
 
 ## 📹 Video Demostrativo del Proyecto
 
-> [!IMPORTANT]
-> **El video de demostración y sustentación de la aplicación se encuentra alojado directamente en la raíz de este repositorio:**
-> 📁 **Archivo:** [`./demo.mp4`](./demo.mp4) *(o `video-demostrativo.mp4`)*
+> [!TIP]
+> **El video completo de demostración, explicación y sustentación del laboratorio está alojado en Google Drive:**
 >
-> **En el video se evidencian todas las funcionalidades y pruebas:**
+> ### 🔗 [▶️ Ver Video Demostrativo en Google Drive (Clic Aquí)](https://drive.google.com/file/d/TU_LINK_DE_DRIVE_AQUI/view?usp=sharing)
+>
+> *(Nota: Reemplaza el enlace por tu URL pública o de visualización de Drive).*
+>
+> **En el video se evidencian todas las funcionalidades y pruebas obligatorias:**
 > 1. Inicio del servidor Node.js y conexión con AWS S3.
 > 2. Subida de imágenes con Drag & Drop hacia Amazon S3 mediante **Presigned URLs**.
 > 3. Carga en tiempo real de la galería y cálculo de métricas de almacenamiento.
