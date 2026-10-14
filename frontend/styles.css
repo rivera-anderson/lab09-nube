@@ -1,0 +1,251 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f6f9;
+  color: #2d3748;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #718096;
+  font-size: 1rem;
+}
+
+/* Upload Section */
+.upload-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2.5rem;
+}
+
+.drop-zone {
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: #fafbfc;
+}
+
+.drop-zone.dragover {
+  border-color: #3182ce;
+  background: #ebf8ff;
+}
+
+.drop-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.drop-zone input[type="file"] {
+  display: none;
+}
+
+.btn-select {
+  display: inline-block;
+  background: #edf2f7;
+  color: #2b6cb0;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0.5rem 0;
+  transition: background 0.2s;
+}
+
+.btn-select:hover {
+  background: #e2e8f0;
+}
+
+.file-name {
+  display: block;
+  font-size: 0.85rem;
+  color: #a0aec0;
+  margin-top: 0.5rem;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.btn-primary {
+  background: #3182ce;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2b6cb0;
+}
+
+.btn-primary:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.status-msg {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  text-align: center;
+  display: none;
+}
+
+.status-msg.success {
+  display: block;
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.status-msg.error {
+  display: block;
+  background: #fed7d7;
+  color: #742a2a;
+}
+
+.status-msg.info {
+  display: block;
+  background: #eebfef;
+  color: #44337a;
+}
+
+/* Gallery Section */
+.gallery-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+}
+
+.gallery-header h2 {
+  font-size: 1.4rem;
+  color: #2d3748;
+}
+
+.btn-secondary {
+  background: #edf2f7;
+  border: 1px solid #cbd5e0;
+  color: #4a5568;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #edf2f7;
+}
+
+.card-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 0.8rem;
+  color: #4a5568;
+  word-break: break-all;
+  margin-bottom: 0.5rem;
+}
+
+.card-meta {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  margin-bottom: 0.75rem;
+}
+
+.btn-delete {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 0.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.btn-delete:hover {
+  background: #c53030;
+}
+
+.empty-state, .loading-spinner {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #a0aec0;
+  font-size: 1rem;
+}

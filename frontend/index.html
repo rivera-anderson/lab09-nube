@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galería de Imágenes - Amazon S3</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📸 Galería Segura en Amazon S3</h1>
+      <p class="subtitle">Carga directa a S3 mediante <strong>Presigned URLs</strong> sin exponer credenciales</p>
+    </header>
+
+    <!-- Zona de carga (Drag and Drop + Input) -->
+    <section class="upload-section">
+      <div id="dropZone" class="drop-zone">
+        <div class="drop-icon">☁️</div>
+        <p>Arrastra tu foto aquí o</p>
+        <label for="fileInput" class="btn-select">Seleccionar Archivo</label>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
+        <span id="fileName" class="file-name">Ningún archivo seleccionado</span>
+      </div>
+
+      <div class="upload-actions">
+        <button id="uploadBtn" class="btn-primary" disabled>Subir Imagen a S3</button>
+      </div>
+
+      <div id="status" class="status-msg"></div>
+    </section>
+
+    <!-- Galería de imágenes -->
+    <section class="gallery-section">
+      <div class="gallery-header">
+        <h2>🖼️ Imágenes en el Bucket</h2>
+        <button id="refreshBtn" class="btn-secondary">🔄 Actualizar</button>
+      </div>
+
+      <div id="loading" class="loading-spinner" style="display: none;">Cargando imágenes...</div>
+      <div id="gallery" class="gallery-grid"></div>
+      <div id="emptyState" class="empty-state" style="display: none;">
+        No hay imágenes en la carpeta <code>originales/</code> del bucket. ¡Sube una!
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
